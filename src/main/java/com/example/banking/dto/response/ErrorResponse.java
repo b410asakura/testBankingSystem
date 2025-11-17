@@ -1,4 +1,4 @@
-package com.example.banking.dto.errorDto;
+package com.example.banking.dto.response;
 
 import java.time.LocalDateTime;
 

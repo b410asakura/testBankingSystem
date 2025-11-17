@@ -1,4 +1,4 @@
-package com.example.banking.dto.userDto;
+package com.example.banking.dto.response;
 
 import lombok.Builder;
 

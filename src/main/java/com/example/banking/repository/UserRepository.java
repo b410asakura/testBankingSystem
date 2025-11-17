@@ -1,7 +1,8 @@
 package com.example.banking.repository;
 
-import com.example.banking.dto.userDto.UserAccountResponse;
+import com.example.banking.dto.response.UserAccountResponse;
 import com.example.banking.entity.User;
+import io.micrometer.common.lang.NonNullApi;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@NonNullApi
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findById(Long id);
 
@@ -20,7 +22,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
 
     @Query("""
-                SELECT new com.example.banking.dto.userDto.UserAccountResponse(
+                SELECT new com.example.banking.dto.response.UserAccountResponse(
                     u.id, u.name, u.email, u.registrationDate, a.accountNumber, a.balance
                 )
                 FROM User u

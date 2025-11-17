@@ -1,9 +1,8 @@
 package com.example.banking.service.impl;
 
-import com.example.banking.dto.SimpleResponse;
-import com.example.banking.dto.userDto.UserAccountResponse;
-import com.example.banking.dto.userDto.UserRequest;
-import com.example.banking.dto.userDto.UserResponse;
+import com.example.banking.dto.response.UserAccountResponse;
+import com.example.banking.dto.request.UserRequest;
+import com.example.banking.dto.response.UserResponse;
 import com.example.banking.entity.User;
 import com.example.banking.exception.DuplicateEmailException;
 import com.example.banking.exception.UserNotFoundException;
@@ -11,7 +10,7 @@ import com.example.banking.repository.UserRepository;
 import com.example.banking.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -29,7 +28,7 @@ public class UserServiceImpl implements UserService {
         log.info("Попытка создать пользователя с email: {}", userRequest.email());
         if (userRepository.findByEmail(userRequest.email()).isPresent()) {
             log.warn("Попытка создать пользователя с уже существующим email: {}", userRequest.email());
-            throw new DuplicateEmailException(userRequest.email());
+            throw new DuplicateEmailException();
         }
 
         User user = new User();
@@ -54,17 +53,6 @@ public class UserServiceImpl implements UserService {
         return mapToResponse(user);
     }
 
-    @Override
-    public UserResponse getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email).orElseThrow(
-                () -> new UserNotFoundException(email));
-        return UserResponse.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .registrationDate(user.getRegistrationDate())
-                .build();
-    }
 
     @Override
     public List<UserResponse> getAllUsers() {
@@ -87,7 +75,7 @@ public class UserServiceImpl implements UserService {
         if (!user.getEmail().equals(userRequest.email()) &&
                 userRepository.findByEmail(userRequest.email()).isPresent()) {
             log.info("Почта с таким именем уже существует");
-            throw new DuplicateEmailException(userRequest.email());
+            throw new DuplicateEmailException();
         }
         user.setName(userRequest.name());
         user.setEmail(userRequest.email());
@@ -98,15 +86,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public SimpleResponse deleteById(Long id) {
+    public ResponseEntity<Void> deleteById(Long id) {
         log.info("Попытка удаления пользователя с id {}", id);
         User user = findUserById(id);
         userRepository.delete(user);
         log.info("Пользователь с id {} успешно удален", id);
-        return SimpleResponse.builder()
-                .status(HttpStatus.OK)
-                .message(String.format("user with id %s was deleted", id))
-                .build();
+        return ResponseEntity.noContent().build();
     }
 
     @Override
@@ -115,7 +100,7 @@ public class UserServiceImpl implements UserService {
         List<UserAccountResponse> users = userRepository.findUsersWithAllAccountsAbove(amount);
         if (users.isEmpty()) {
             log.info("Списко пользователей пуст");
-            throw new UserNotFoundException(amount);
+            throw new UserNotFoundException();
         }
         return users.stream()
                 .map(u -> new UserAccountResponse(
@@ -132,10 +117,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse findUserByEmail(String email) {
         log.info("Попытка получения пользователя по email {}", email);
-        User user = userRepository.findByEmail(email).orElseThrow(
+        User user = userRepository.findUsersWithEmail(email).orElseThrow(
                 () -> {
                     log.info("Пользователь не найден с email {}", email);
-                    return new UserNotFoundException(email);
+                    return new UserNotFoundException();
                 }
         );
         return UserResponse.builder()
@@ -147,13 +132,11 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
-
     private User findUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> {
                     log.info("Пользователь не найден с id {}", id);
-                    return new UserNotFoundException(id);
+                    return new UserNotFoundException();
                 });
     }
 

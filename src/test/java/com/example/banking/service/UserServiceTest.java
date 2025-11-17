@@ -1,8 +1,8 @@
 package com.example.banking.service;
 
-import com.example.banking.dto.userDto.UserAccountResponse;
-import com.example.banking.dto.userDto.UserRequest;
-import com.example.banking.dto.userDto.UserResponse;
+import com.example.banking.dto.response.UserAccountResponse;
+import com.example.banking.dto.request.UserRequest;
+import com.example.banking.dto.response.UserResponse;
 import com.example.banking.entity.User;
 import com.example.banking.exception.DuplicateEmailException;
 import com.example.banking.exception.UserNotFoundException;
@@ -133,7 +133,7 @@ class UserServiceTest {
         List<UserAccountResponse> result = userService.getAllUsersAboveAmount(BigDecimal.valueOf(10000));
 
         assertEquals(1, result.size());
-        assertEquals("12345", result.get(0).accountNumber());
+        assertEquals("12345", result.getFirst().accountNumber());
     }
 
     @Test

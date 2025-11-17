@@ -1,8 +1,8 @@
 package com.example.banking.service;
 
-import com.example.banking.dto.SimpleResponse;
-import com.example.banking.dto.accountDto.AccountRequest;
-import com.example.banking.dto.accountDto.AccountResponse;
+import com.example.banking.dto.request.AccountRequest;
+import com.example.banking.dto.response.AccountResponse;
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -17,7 +17,7 @@ public interface AccountService {
 
     List<AccountResponse> getAccountsByUser(String userEmail);
 
-    SimpleResponse deleteById(Long id);
+    ResponseEntity<Void> deleteById(Long id);
 
     BigDecimal findTotalBalance();
 

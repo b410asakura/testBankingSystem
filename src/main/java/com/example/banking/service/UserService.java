@@ -1,9 +1,9 @@
 package com.example.banking.service;
 
-import com.example.banking.dto.SimpleResponse;
-import com.example.banking.dto.userDto.UserAccountResponse;
-import com.example.banking.dto.userDto.UserRequest;
-import com.example.banking.dto.userDto.UserResponse;
+import com.example.banking.dto.response.UserAccountResponse;
+import com.example.banking.dto.request.UserRequest;
+import com.example.banking.dto.response.UserResponse;
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -16,11 +16,9 @@ public interface UserService {
 
     List<UserResponse> getAllUsers();
 
-    UserResponse getUserByEmail(String email);
-
     UserResponse updateUser(Long id, UserRequest userRequest);
 
-    SimpleResponse deleteById(Long id);
+    ResponseEntity<Void> deleteById(Long id);
 
     List<UserAccountResponse> getAllUsersAboveAmount(BigDecimal amount);
 

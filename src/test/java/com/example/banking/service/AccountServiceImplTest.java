@@ -1,8 +1,7 @@
 package com.example.banking.service;
 
-import com.example.banking.dto.SimpleResponse;
-import com.example.banking.dto.accountDto.AccountRequest;
-import com.example.banking.dto.accountDto.AccountResponse;
+import com.example.banking.dto.request.AccountRequest;
+import com.example.banking.dto.response.AccountResponse;
 import com.example.banking.entity.Account;
 import com.example.banking.entity.User;
 import com.example.banking.exception.AccountNotFoundException;
@@ -15,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -142,7 +143,7 @@ public class AccountServiceImplTest {
         List<AccountResponse> response = accountService.getAccountsByUser("test@mail.com");
 
         assertEquals(1, response.size());
-        assertEquals("12345", response.get(0).accountNumber());
+        assertEquals("12345", response.getFirst().accountNumber());
     }
 
     @Test
@@ -160,9 +161,9 @@ public class AccountServiceImplTest {
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
         doNothing().when(accountRepository).deleteById(1L);
 
-        SimpleResponse response = accountService.deleteById(1L);
+        ResponseEntity<Void> response = accountService.deleteById(1L);
 
-        assertEquals("счет успешно удален", response.message());
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
         verify(accountRepository).deleteById(1L);
     }
 

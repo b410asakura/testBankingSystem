@@ -1,8 +1,7 @@
-package com.example.banking.api;
+package com.example.banking.controller;
 
-import com.example.banking.dto.SimpleResponse;
-import com.example.banking.dto.accountDto.AccountRequest;
-import com.example.banking.dto.accountDto.AccountResponse;
+import com.example.banking.dto.request.AccountRequest;
+import com.example.banking.dto.response.AccountResponse;
 import com.example.banking.service.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "account API")
 @Slf4j
-public class AccountApi {
+public class AccountController {
     private final AccountService accountService;
 
     @PostMapping
@@ -75,11 +74,11 @@ public class AccountApi {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Метод для удаления пользователя")
-    public ResponseEntity<SimpleResponse> deleteAccountsByEmail(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteAccountsByEmail(@PathVariable Long id) {
         log.info("Запрос на удаление счета");
-        SimpleResponse simpleResponse = accountService.deleteById(id);
+        ResponseEntity<Void> response = accountService.deleteById(id);
         log.info("Счет с id {} был удален", id);
-        return ResponseEntity.ok(simpleResponse);
+        return response;
     }
 
     @GetMapping("/total-balance")

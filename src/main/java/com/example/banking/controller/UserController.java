@@ -1,9 +1,8 @@
-package com.example.banking.api;
+package com.example.banking.controller;
 
-import com.example.banking.dto.SimpleResponse;
-import com.example.banking.dto.userDto.UserAccountResponse;
-import com.example.banking.dto.userDto.UserRequest;
-import com.example.banking.dto.userDto.UserResponse;
+import com.example.banking.dto.response.UserAccountResponse;
+import com.example.banking.dto.request.UserRequest;
+import com.example.banking.dto.response.UserResponse;
 import com.example.banking.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -24,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Tag(name = "user API")
 @Slf4j
-public class UserApi {
+public class UserController {
     private final UserService userService;
 
 
@@ -85,11 +84,11 @@ public class UserApi {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Метод для удаления пользователя")
-    public ResponseEntity<SimpleResponse> deleteUser(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         log.info("Запрос на удаление пользователя с id {}", id);
-        SimpleResponse simpleResponse = userService.deleteById(id);
+        ResponseEntity<Void> response = userService.deleteById(id);
         log.info("Пользователь с id {} был удален", id);
-        return ResponseEntity.ok(simpleResponse);
+        return response;
     }
 
     @GetMapping("/above")

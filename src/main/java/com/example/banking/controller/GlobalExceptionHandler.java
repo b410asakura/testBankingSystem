@@ -1,6 +1,8 @@
-package com.example.banking.exception;
+package com.example.banking.controller;
 
-import com.example.banking.dto.errorDto.ErrorResponse;
+import com.example.banking.dto.response.ErrorResponse;
+import com.example.banking.exception.DuplicateEmailException;
+import com.example.banking.exception.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,9 +19,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> handleException(MethodArgumentNotValidException e) {
         Map<String, String> errors = new HashMap<>();
-        e.getBindingResult().getFieldErrors().forEach((error) -> {
-            errors.put(error.getField(), error.getDefaultMessage());
-        });
+        e.getBindingResult().getFieldErrors().forEach((error) ->
+                errors.put(error.getField(), error.getDefaultMessage()));
         return ResponseEntity.badRequest().body(errors);
     }
 
